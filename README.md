@@ -2,9 +2,12 @@
 
 ### Travis 
 
-develop: [![Build Status](https://travis-ci.org/uw-it-edm/wcc-to-acs-replicator.svg?branch=develop)](https://travis-ci.org/uw-it-edm/wcc-to-acs-replicator)
-master: [![Build Status](https://travis-ci.org/uw-it-edm/wcc-to-acs-replicator.svg?branch=master)](https://travis-ci.org/uw-it-edm/wcc-to-acs-replicator)
+develop: [![Build Status](https://travis-ci.com/uw-it-edm/wcc-to-acs-replicator.svg?branch=develop)](https://travis-ci.com/uw-it-edm/wcc-to-acs-replicator)
+master: [![Build Status](https://travis-ci.com/uw-it-edm/wcc-to-acs-replicator.svg?branch=master)](https://travis-ci.com/uw-it-edm/wcc-to-acs-replicator)
 
+### Codacy
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b26e733e777f400595e8b268e218a772)](https://www.codacy.com/app/uw-it-edm/wcc-to-acs-replicator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=uw-it-edm/wcc-to-acs-replicator&amp;utm_campaign=Badge_Grade)
 
 ## Running locally.
 
