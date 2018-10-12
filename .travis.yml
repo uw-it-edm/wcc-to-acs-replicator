@@ -30,6 +30,7 @@ jobs:
 
 after_success:
 - ./gradlew jacocoTestReport coveralls
+- ./gradlew jacocoTestReport sendCoverageToCodacy
 
 notifications:
   email: false

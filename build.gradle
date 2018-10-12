@@ -49,6 +49,8 @@ repositories {
 	maven { url "http://repo.spring.io/milestone" }
 }
 
+configurations { codacy }
+
 bootJar {
 	baseName = 'wcc-to-acs-replicator'
 
@@ -99,6 +101,7 @@ dependencies {
 
 	compile("com.google.guava:guava:$guavaVersion")
 
+	codacy group: 'com.codacy', name: 'codacy-coverage-reporter', version: '1.0.7'
 
 
 	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
@@ -216,4 +219,15 @@ jacocoTestReport {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
     }
+}
+
+task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
+	main = "com.codacy.CodacyCoverageReporter"
+	classpath = configurations.codacy
+	args = [
+			"-l",
+			"Java",
+			"-r",
+			"${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+	]
 }
