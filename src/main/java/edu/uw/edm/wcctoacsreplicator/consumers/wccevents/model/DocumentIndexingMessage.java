@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 public class DocumentIndexingMessage {
+
 	private Document document;
-	private IndexingType indexingType;
+	private IndexingType documentChangedType;
 
 	public enum IndexingType {
 		create, update, delete,
@@ -15,9 +16,9 @@ public class DocumentIndexingMessage {
 	public DocumentIndexingMessage() {
 	}
 
-	public DocumentIndexingMessage(Document document, IndexingType indexingType) {
+	public DocumentIndexingMessage(Document document, IndexingType documentChangedType) {
 		this.document = document;
-		this.indexingType = indexingType;
+		this.documentChangedType = documentChangedType;
 	}
 
 }

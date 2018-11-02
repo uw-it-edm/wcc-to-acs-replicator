@@ -40,12 +40,12 @@ public class WccEventsListenerImpl implements WccEventsListener {
         checkNotNull(documentIndexingMessage.getDocument(), "document is required");
         checkNotNull(documentIndexingMessage.getDocument().getId(), "documentId is required");
 
-        log.trace("received : {} for {}", documentIndexingMessage.getIndexingType(), documentIndexingMessage.getDocument().getId());
+        log.trace("received : {} for {}", documentIndexingMessage.getDocumentChangedType(), documentIndexingMessage.getDocument().getId());
 
         checkIfIdShouldBeProcessed(documentIndexingMessage);
         checkIfProfileShouldBeProcessed(documentIndexingMessage);
 
-        switch (documentIndexingMessage.getIndexingType()) {
+        switch (documentIndexingMessage.getDocumentChangedType()) {
             case create:
                 addToACS(documentIndexingMessage.getDocument());
                 break;
@@ -56,7 +56,7 @@ public class WccEventsListenerImpl implements WccEventsListener {
                 deleteFromACS(documentIndexingMessage.getDocument());
                 break;
             default:
-                throw new AmqpRejectAndDontRequeueException(new UnsupportedOperationException("This method only allow create/update/delete , received " + documentIndexingMessage.getIndexingType().name()));
+                throw new AmqpRejectAndDontRequeueException(new UnsupportedOperationException("This method only allow create/update/delete , received " + documentIndexingMessage.getDocumentChangedType().name()));
         }
 
     }

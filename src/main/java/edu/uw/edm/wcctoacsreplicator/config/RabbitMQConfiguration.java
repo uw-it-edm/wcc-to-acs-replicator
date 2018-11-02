@@ -113,6 +113,8 @@ public class RabbitMQConfiguration {
         idClassMapping.put(DocumentIndexingMessage.class.getCanonicalName(), DocumentIndexingMessage.class);
         idClassMapping.put("content.api.v3.indexing.IndexingMessage", DocumentIndexingMessage.class);
         idClassMapping.put("DocumentIndexingMessage", DocumentIndexingMessage.class);
+        idClassMapping.put("DocumentChangedBroadcastMessage", DocumentIndexingMessage.class);
+        idClassMapping.put("eaiw.model.DocumentChangedBroadcastMessage", DocumentIndexingMessage.class);
         typeMapper.setIdClassMapping(idClassMapping);
         return typeMapper;
     }
