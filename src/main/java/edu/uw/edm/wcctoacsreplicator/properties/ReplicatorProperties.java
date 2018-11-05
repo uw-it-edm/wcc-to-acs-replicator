@@ -1,14 +1,15 @@
 package edu.uw.edm.wcctoacsreplicator.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -17,9 +18,10 @@ import lombok.experimental.Accessors;
 @Component
 @ConfigurationProperties(prefix = "uw.replicator")
 @Data
+@Validated
 public class ReplicatorProperties {
 
-    @NonNull
+    @NotNull
     private String dynamoTableNamePrefix;
 
     private boolean wccEventListenerUpdatesMapping = false;
