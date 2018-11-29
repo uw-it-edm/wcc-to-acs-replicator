@@ -35,7 +35,7 @@ public class WccEventsListenerImplTest {
     @Before
     public void setUp() throws Exception {
 
-        replicatorProperties = new ReplicatorProperties("");
+        replicatorProperties = new ReplicatorProperties();
 
         wccEventsListener = new WccEventsListenerImpl(contentApisClient, replicatorProperties);
     }
