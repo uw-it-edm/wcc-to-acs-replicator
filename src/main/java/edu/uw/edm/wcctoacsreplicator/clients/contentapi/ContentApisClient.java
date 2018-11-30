@@ -30,6 +30,8 @@ import edu.uw.edm.wcctoacsreplicator.wccmapping.WCCToACSMapping;
 import edu.uw.edm.wcctoacsreplicator.wccmapping.WCCToACSMappingService;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Maxime Deravet Date: 10/8/18
  */
@@ -39,10 +41,12 @@ public class ContentApisClient {
 
     public static final String CONTENT_API_FIELD_PROFILE_ID = "ProfileId";
     public static final String CONTENT_API_FIELD_ORIGINAL_FILE_NAME = "OriginalFileName";
-    private static final String CONTENT_API2_POST_V_3_ITEM = "/content/v3/item";
     private static final String CONTENT_API_GET_V_3_FILE = "/securid/v3/file/";
     private static final String CONTENT_API_GET_PRIMARY_RENDITION_PARAMS = "?rendition=Primary&forcePDF=false&useChannel=true";
     public static final String CONTENT_API_FIELD_LAST_MODIFIER = "LastModifier";
+
+    private static final String CONTENT_API2_POST_V_3_ITEM = "/content/v3/item";
+    static final String CONTENT_API2_DELETE_V_3_ITEM = "/content/v3/item/";
 
 
     private final WCCToACSMappingService wccToACSMappingService;
@@ -147,7 +151,7 @@ public class ContentApisClient {
 
 
             log.trace("got response {}", response.getStatusCode());
-            log.trace("{}" , response.getBody());
+            log.trace("{}", response.getBody());
 
 
         } catch (HttpServerErrorException e) {
@@ -200,7 +204,39 @@ public class ContentApisClient {
     }
 
 
-    public void delete(String id) {
-        //TODO
+    public ResponseEntity<String> delete(Document document) throws NoMappingForIdException {
+        checkNotNull(document, "Document cannot be null");
+        checkNotNull(document.getId(), "Document Id cannot be null");
+
+        final String wccId = document.getId();
+        final Optional<WCCToACSMapping> mappingForWCCId = wccToACSMappingService.getMappingForWCCId(wccId);
+        if (!mappingForWCCId.isPresent()) {
+            log.error("Document {} should be in wcc ", wccId);
+            throw new NoMappingForIdException(wccId);
+        } else {
+            final String acsId = mappingForWCCId.get().getAcsId();
+            final String serverUrl = replicatorProperties.getContentApi2().getHostAndContext() + CONTENT_API2_DELETE_V_3_ITEM;
+            final String entityUrl = serverUrl + acsId;
+
+            log.trace("DELETE {}", entityUrl);
+            ResponseEntity<String> response = null;
+            try {
+                final HttpHeaders headers = new HttpHeaders();
+                headers.add(replicatorProperties.getContentApi2().getAuthenticationHeader(), replicatorProperties.getContentApi2().getDeleteActAsUser());
+
+                final HttpEntity<?> request = new HttpEntity<Object>(headers);
+
+                response = restTemplate.exchange(entityUrl, HttpMethod.DELETE, request, String.class, new HashMap<>());
+
+                log.trace("got response {}", response.getStatusCode());
+            } catch (HttpServerErrorException e) {
+                log.error(e.getResponseBodyAsString());
+                throw e;
+            } catch (RestClientException e) {
+                log.error(e.getMessage());
+                throw e;
+            }
+            return response;
+        }
     }
 }

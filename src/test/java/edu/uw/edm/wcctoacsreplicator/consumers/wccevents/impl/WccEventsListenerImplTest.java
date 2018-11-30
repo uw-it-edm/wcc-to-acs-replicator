@@ -115,7 +115,7 @@ public class WccEventsListenerImplTest {
 
         wccEventsListener.execute(documentIndexingMessage);
 
-        verify(contentApisClient, times(1)).delete(eq("1234"));
+        verify(contentApisClient, times(1)).delete(eq(document));
     }
 
 

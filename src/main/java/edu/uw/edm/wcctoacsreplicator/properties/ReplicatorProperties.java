@@ -49,12 +49,12 @@ public class ReplicatorProperties {
     public static class ContentApi {
         private String authenticationHeader;
         private String hostAndContext;
-
     }
 
     @Data
     public static class ContentApi2 {
         private String authenticationHeader;
         private String hostAndContext;
+        private String deleteActAsUser = "admin";
     }
 }
