@@ -2,7 +2,7 @@ buildscript {
 	ext {
 		springBootVersion = '2.0.5.RELEASE'
 		guavaVersion = '26.0-jre'
-		springCloudReleaseTrain = 'Finchley.SR1'
+		springCloudReleaseTrain = 'Finchley.SR2'
 		springDataDynamoDBVersion = '5.0.4'
 	}
 	repositories {
