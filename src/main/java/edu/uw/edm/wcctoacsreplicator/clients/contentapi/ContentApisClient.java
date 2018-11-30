@@ -46,7 +46,6 @@ public class ContentApisClient {
     public static final String CONTENT_API_FIELD_LAST_MODIFIER = "LastModifier";
 
     private static final String CONTENT_API2_POST_V_3_ITEM = "/content/v3/item";
-    private static final String CONTENT_API2_DELETE_ACT_AS_USER = "admin";
     static final String CONTENT_API2_DELETE_V_3_ITEM = "/content/v3/item/";
 
 
@@ -223,7 +222,7 @@ public class ContentApisClient {
             ResponseEntity<String> response = null;
             try {
                 final HttpHeaders headers = new HttpHeaders();
-                headers.add(replicatorProperties.getContentApi2().getAuthenticationHeader(), CONTENT_API2_DELETE_ACT_AS_USER);
+                headers.add(replicatorProperties.getContentApi2().getAuthenticationHeader(), replicatorProperties.getContentApi2().getDeleteActAsUser());
 
                 final HttpEntity<?> request = new HttpEntity<Object>(headers);
 
