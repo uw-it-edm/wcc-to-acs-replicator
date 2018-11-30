@@ -61,7 +61,7 @@ public class WccEventsListenerImpl implements WccEventsListener {
 
     }
 
-    private void deleteFromACS(Document document) {
+    private void deleteFromACS(Document document) throws NoMappingForIdException {
         checkNotNull(document, "Document cannot be null");
         checkNotNull(document.getId(), "Document cannot be null");
 
@@ -69,7 +69,7 @@ public class WccEventsListenerImpl implements WccEventsListener {
             throw new AmqpRejectAndDontRequeueException("Not deleting docId " + document.getId() + " by app rule");
         }
 
-        contentApisClient.delete(document.getId());
+        contentApisClient.delete(document);
     }
 
     private void updateACS(Document document) throws IOException, NoMappingForIdException {

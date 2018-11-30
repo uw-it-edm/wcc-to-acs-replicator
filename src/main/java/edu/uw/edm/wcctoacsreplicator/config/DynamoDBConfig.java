@@ -64,10 +64,10 @@ public class DynamoDBConfig {
         AmazonDynamoDB amazonDynamoDB = builder.build();
 
 
-        if (!Strings.isNullOrEmpty(replicatorProperties.getDynamoDBEndpointOverride()) && replicatorProperties.isDynamoDBCreateTable()) {
+        if (isWorkstationEnvironment(replicatorProperties)) {
 
             Optional<String> table = amazonDynamoDB.listTables().getTableNames().stream().
-                    filter(tableName -> tableName.equals(WCCToACSMapping.TABLE_NAME)).findFirst();
+                    filter(tableName -> tableName.equals(WCCToACSMapping.TABLE_NAME )).findFirst();
 
             if (!table.isPresent()) {
                 amazonDynamoDB.createTable(new DynamoDBMapper(amazonDynamoDB)
@@ -81,12 +81,18 @@ public class DynamoDBConfig {
         return amazonDynamoDB;
     }
 
+    private boolean isWorkstationEnvironment(ReplicatorProperties replicatorProperties) {
+        return !Strings.isNullOrEmpty(replicatorProperties.getDynamoDBEndpointOverride()) && replicatorProperties.isDynamoDBCreateTable();
+    }
+
     @Bean
-    public DynamoDBMapperConfig dynamoDBMapperConfig(DynamoDBMapperConfig.TableNameOverride tableNameOverrider) {
+    public DynamoDBMapperConfig dynamoDBMapperConfig(DynamoDBMapperConfig.TableNameOverride tableNameOverrider, ReplicatorProperties replicatorProperties) {
 
         DynamoDBMapperConfig.Builder builder = new DynamoDBMapperConfig.Builder();
 
-        builder.setTableNameOverride(tableNameOverrider);
+        if (!isWorkstationEnvironment(replicatorProperties)) {
+            builder.setTableNameOverride(tableNameOverrider);
+        }
 
         // Sadly this is a @deprecated method but new DynamoDBMapperConfig.Builder() is incomplete compared to DynamoDBMapperConfig.DEFAULT
         return new DynamoDBMapperConfig(DynamoDBMapperConfig.DEFAULT, builder.build());

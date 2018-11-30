@@ -23,7 +23,7 @@ docker run -p 8123:8000 amazon/dynamodb-local
 Then you'll want to set these 2 properties in your config file : 
 
 ```
-uw.replicator.dynamoDBEndpointOverride=http://localhost:8000
+uw.replicator.dynamoDBEndpointOverride=http://localhost:8123
 uw.replicator.dynamoDBCreateTable=true
 ```
 
