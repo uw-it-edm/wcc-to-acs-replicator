@@ -41,12 +41,13 @@ public class ContentApisClient {
 
     public static final String CONTENT_API_FIELD_PROFILE_ID = "ProfileId";
     public static final String CONTENT_API_FIELD_ORIGINAL_FILE_NAME = "OriginalFileName";
-    private static final String CONTENT_API2_POST_V_3_ITEM = "/content/v3/item";
-    static final String CONTENT_API2_DELETE_V_3_ITEM = "/content/v3/item/";
     private static final String CONTENT_API_GET_V_3_FILE = "/securid/v3/file/";
     private static final String CONTENT_API_GET_PRIMARY_RENDITION_PARAMS = "?rendition=Primary&forcePDF=false&useChannel=true";
     public static final String CONTENT_API_FIELD_LAST_MODIFIER = "LastModifier";
+
+    private static final String CONTENT_API2_POST_V_3_ITEM = "/content/v3/item";
     private static final String CONTENT_API2_DELETE_ACT_AS_USER = "admin";
+    static final String CONTENT_API2_DELETE_V_3_ITEM = "/content/v3/item/";
 
 
     private final WCCToACSMappingService wccToACSMappingService;
