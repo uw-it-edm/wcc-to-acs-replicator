@@ -40,6 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ContentApisClient {
 
     public static final String CONTENT_API_FIELD_PROFILE_ID = "ProfileId";
+    public static final String CONTENT_API_FIELD_WCC_ID = "WccId";
     public static final String CONTENT_API_FIELD_ORIGINAL_FILE_NAME = "OriginalFileName";
     private static final String CONTENT_API_GET_V_3_FILE = "/securid/v3/file/";
     private static final String CONTENT_API_GET_PRIMARY_RENDITION_PARAMS = "?rendition=Primary&forcePDF=false&useChannel=true";
@@ -78,18 +79,16 @@ public class ContentApisClient {
 
         String lastModifier = getLastModifier(document);
 
+        addWccIdToDocument(document, contentId);
+
         //TODO this method as a side effect, we should rename
-        String updateURL = getContentApi2CreateOrUpdateURL(document, mappingForWCCId);
+        String updateURL = getContentApi2CreateOrUpdateURLAndUpdateIdIfNecessary(document, mappingForWCCId);
 
         MultiValueMap<String, Object> multipartRequest = new LinkedMultiValueMap<>();
         addDocumentToMultipartRequest(document, multipartRequest);
 
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        headers.add(replicatorProperties.getContentApi().getAuthenticationHeader(), lastModifier);
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(multipartRequest, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = getRequestWithAuthenticationHeaders(lastModifier, multipartRequest);
 
 
         createOrUpdateDocumentInContentApi2(updateURL, request);
@@ -112,8 +111,10 @@ public class ContentApisClient {
 
         InputStreamResource inputStreamResource = getContentApiFileStream(contentId, document, lastModifier);
 
+        addWccIdToDocument(document, contentId);
 
-        String serverUrl = getContentApi2CreateOrUpdateURL(document, mappingForWCCId);
+
+        String serverUrl = getContentApi2CreateOrUpdateURLAndUpdateIdIfNecessary(document, mappingForWCCId);
 
 
         MultiValueMap<String, Object> multipartRequest = new LinkedMultiValueMap<>();
@@ -122,11 +123,7 @@ public class ContentApisClient {
         addFileToMultipartRequest(inputStreamResource, multipartRequest);
 
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        headers.add(replicatorProperties.getContentApi().getAuthenticationHeader(), lastModifier);
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(multipartRequest, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = getRequestWithAuthenticationHeaders(lastModifier, multipartRequest);
 
 
         ResponseEntity<Document> response = createOrUpdateDocumentInContentApi2(serverUrl, request);
@@ -144,8 +141,20 @@ public class ContentApisClient {
 
     }
 
+    private void addWccIdToDocument(Document document, String contentId) {
+        document.getMetadata().put(CONTENT_API_FIELD_WCC_ID, contentId);
+    }
+
+    private HttpEntity<MultiValueMap<String, Object>> getRequestWithAuthenticationHeaders(String lastModifier, MultiValueMap<String, Object> multipartRequest) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        headers.add(replicatorProperties.getContentApi().getAuthenticationHeader(), lastModifier);
+        return new HttpEntity<>(multipartRequest, headers);
+    }
+
     private ResponseEntity<Document> createOrUpdateDocumentInContentApi2(String serverUrl, HttpEntity<MultiValueMap<String, Object>> request) throws RestClientException {
-        ResponseEntity<Document> response = null;
+        ResponseEntity<Document> response;
         try {
             response = restTemplate.exchange(serverUrl, HttpMethod.POST, request, Document.class, new HashMap<>());
 
@@ -164,7 +173,7 @@ public class ContentApisClient {
         return response;
     }
 
-    private String getContentApi2CreateOrUpdateURL(Document document, Optional<WCCToACSMapping> mappingForWCCId) {
+    private String getContentApi2CreateOrUpdateURLAndUpdateIdIfNecessary(Document document, Optional<WCCToACSMapping> mappingForWCCId) {
         String serverUrl = replicatorProperties.getContentApi2().getHostAndContext() + CONTENT_API2_POST_V_3_ITEM;
 
         if (mappingForWCCId.isPresent()) {
