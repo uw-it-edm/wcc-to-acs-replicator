@@ -129,16 +129,6 @@ public class ContentApisClient {
         ResponseEntity<Document> response = createOrUpdateDocumentInContentApi2(serverUrl, request);
 
         String acsId = response.getBody().getId();
-
-
-        /**
-         * //TODO CAB-3256 This should be removed once ACS starts sending the create events to SNS
-         */
-        if (replicatorProperties.isWccEventListenerUpdatesMapping() && !mappingForWCCId.isPresent()) {
-            wccToACSMappingService.createEntry(contentId, acsId, (String) document.getMetadata().get(CONTENT_API_FIELD_PROFILE_ID));
-        }
-
-
     }
 
     private void addWccIdToDocument(Document document, String contentId) {
