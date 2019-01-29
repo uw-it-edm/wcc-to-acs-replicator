@@ -3,7 +3,7 @@ buildscript {
 		springBootVersion = '2.0.5.RELEASE'
 		guavaVersion = '27.0.1-jre'
 		springCloudReleaseTrain = 'Finchley.SR2'
-		springDataDynamoDBVersion = '5.0.4'
+		springDataDynamoDBVersion = '5.1.0'
 	}
 	repositories {
 		jcenter()
