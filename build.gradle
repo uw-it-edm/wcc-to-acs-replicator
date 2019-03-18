@@ -101,7 +101,7 @@ dependencies {
 
 	compile("com.google.guava:guava:$guavaVersion")
 
-	codacy group: 'com.codacy', name: 'codacy-coverage-reporter', version: '1.0.7'
+	codacy group: 'com.codacy', name: 'codacy-coverage-reporter', version: '6.0.0-nativebinary.8953fd6'
 
 
 	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
