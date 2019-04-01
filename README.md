@@ -1,3 +1,5 @@
+# DEPRECATED - This project is deprecated and no longer maintained
+
 # wcc-to-acs-replicator
 
 ### Travis 
